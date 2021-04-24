@@ -25,25 +25,25 @@ plugins {
    id("io.qameta.allure") version "2.8.1"
 }
 
-dependencies {
-   implementation(kotlin("reflect"))
-   implementation(Libs.Kotest.common)
-   implementation(Libs.Kotest.api)
-   implementation(Libs.Coroutines.coreJvm)
-   implementation("javax.xml.bind:jaxb-api:2.3.1")
-   implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
-   implementation("com.sun.xml.bind:jaxb-impl:2.3.2")
-   api(Libs.Allure.commons)
-   testImplementation(Libs.Kotest.assertions)
-   testImplementation(Libs.Kotest.junit5)
-   testImplementation(Libs.Jackson.kotlin)
-}
-
 allprojects {
    apply(plugin = "org.jetbrains.kotlin.jvm")
 
    group = Libs.org
    version = Ci.version
+
+   dependencies {
+      implementation(kotlin("reflect"))
+      implementation(Libs.Kotest.common)
+      implementation(Libs.Kotest.api)
+      implementation(Libs.Coroutines.coreJvm)
+      implementation("javax.xml.bind:jaxb-api:2.3.1")
+      implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
+      implementation("com.sun.xml.bind:jaxb-impl:2.3.2")
+      api(Libs.Allure.commons)
+      testImplementation(Libs.Kotest.assertions)
+      testImplementation(Libs.Kotest.junit5)
+      testImplementation(Libs.Jackson.kotlin)
+   }
 
    tasks.named<Test>("test") {
       useJUnitPlatform()
