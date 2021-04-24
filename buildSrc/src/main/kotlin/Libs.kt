@@ -10,9 +10,9 @@ object Libs {
       const val Api = "io.kotest:kotest-framework-api:$version"
    }
 
-   object TestContainers {
-      private const val version = "1.15.2"
-      const val testcontainers = "org.testcontainers:testcontainers:$version"
+   object Allure {
+      private const val version = "2.13.9"
+      const val commons = "io.qameta.allure:allure-java-commons:$version"
    }
 
    object Coroutines {
