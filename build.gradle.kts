@@ -24,22 +24,24 @@ plugins {
    kotlin("jvm").version(Libs.kotlinVersion)
 }
 
+dependencies {
+   implementation(kotlin("reflect"))
+   implementation(Libs.Kotest.Common)
+   implementation(Libs.Kotest.Api)
+   implementation(Libs.Coroutines.coreJvm)
+   implementation("javax.xml.bind:jaxb-api:2.3.1")
+   implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
+   implementation("com.sun.xml.bind:jaxb-impl:2.3.2")
+   api(Libs.Allure.commons)
+   testImplementation(Libs.Kotest.Assertions)
+   testImplementation(Libs.Kotest.Junit5)
+}
+
 allprojects {
    apply(plugin = "org.jetbrains.kotlin.jvm")
 
    group = Libs.org
    version = Ci.version
-
-   dependencies {
-      implementation(Libs.Kotest.Api)
-      implementation(Libs.Coroutines.coreJvm)
-      implementation("javax.xml.bind:jaxb-api:2.3.1")
-      implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
-      implementation("com.sun.xml.bind:jaxb-impl:2.3.2")
-      api(Libs.Allure.commons)
-      testImplementation(Libs.Kotest.Assertions)
-      testImplementation(Libs.Kotest.Junit5)
-   }
 
    tasks.named<Test>("test") {
       useJUnitPlatform()

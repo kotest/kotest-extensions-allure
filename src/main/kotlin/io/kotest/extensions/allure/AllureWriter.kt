@@ -123,6 +123,19 @@ class AllureWriter {
       allure.writeTestCase(uuid)
    }
 
+   private fun links(kclass: KClass<out Spec>): List<io.qameta.allure.model.Link?> {
+      val links = mutableListOf<io.qameta.allure.model.Link?>()
+      kclass.issue()?.let {
+         links.add(kclass.issue())
+      }
+      kclass.link()?.let {
+         links.add(kclass.link())
+      }
+      kclass.links()?.forEach{
+         links.add(ResultsUtils.createLink(it))
+      }
+      return links.toList()
+   }
 
    fun allureResultSpecInitFailure(kclass: KClass<out Spec>, t: Throwable) {
       log("Allure start for failure test init")
@@ -142,16 +155,7 @@ class AllureWriter {
          kclass.story()
       )
 
-      val links = mutableListOf<io.qameta.allure.model.Link?>()
-      kclass.issue()?.let {
-         links.add(kclass.issue())
-      }
-      kclass.link()?.let {
-         links.add(kclass.link())
-      }
-      kclass.links()?.forEach{
-         links.add(ResultsUtils.createLink(it))
-      }
+      val links = links(kclass)
 
       val result = io.qameta.allure.model.TestResult()
          .setFullName(kclass.qualifiedName)
