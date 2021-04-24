@@ -9,9 +9,6 @@ import io.kotest.core.test.TestResult
 import io.kotest.core.test.TestType
 import kotlin.reflect.KClass
 
-@Deprecated("Use AllureTestReporter(); this Will be removed in 4.6", level = DeprecationLevel.ERROR)
-val AllureTestListener = AllureTestReporter()
-
 class AllureTestReporter(private val includeContainers: Boolean = false) : TestListener, ProjectListener, SpecInstantiationListener {
 
    override val name = "AllureTestReporter"
