@@ -6,7 +6,6 @@ import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestPath
 import io.kotest.core.test.TestResult
 import io.kotest.core.test.TestStatus
-import io.kotest.mpp.log
 import io.qameta.allure.Allure
 import io.qameta.allure.AllureLifecycle
 import io.qameta.allure.Epic
@@ -41,7 +40,6 @@ class AllureWriter {
    val allure = try {
       Allure.getLifecycle() ?: throw IllegalStateException("Allure lifecycle was null")
    } catch (t: Throwable) {
-      log("Error getting allure lifecycle", t)
       t.printStackTrace()
       throw t
    }
@@ -51,8 +49,6 @@ class AllureWriter {
    fun id(testCase: TestCase) = uuids[testCase.description.testPath()]
 
    fun startTestCase(testCase: TestCase) {
-      log("Allure beforeTest $testCase")
-
       val labels = listOfNotNull(
          testCase.epic(),
          testCase.feature(),
@@ -95,7 +91,6 @@ class AllureWriter {
    }
 
    fun finishTestCase(testCase: TestCase, result: TestResult) {
-      log("Allure afterTest $testCase")
       val status = when (result.status) {
          // what we call an error, allure calls broken
          TestStatus.Error -> Status.BROKEN
@@ -138,8 +133,6 @@ class AllureWriter {
    }
 
    fun allureResultSpecInitFailure(kclass: KClass<out Spec>, t: Throwable) {
-      log("Allure start for failure test init")
-
       val uuid = UUID.randomUUID()
       val labels = listOfNotNull(
          ResultsUtils.createSuiteLabel(kclass.qualifiedName),
@@ -167,7 +160,6 @@ class AllureWriter {
       allure.scheduleTestCase(result)
       allure.startTestCase(uuid.toString())
 
-      log("Allure finish for failure test init")
       val instanceError = (t.cause as InvocationTargetException).targetException
 
       val details = StatusDetails()
