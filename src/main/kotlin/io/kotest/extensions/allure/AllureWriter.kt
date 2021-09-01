@@ -23,6 +23,7 @@ import io.qameta.allure.model.StatusDetails
 import io.qameta.allure.model.StepResult
 import io.qameta.allure.util.ResultsUtils
 import java.lang.reflect.InvocationTargetException
+import java.util.concurrent.ConcurrentHashMap
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
@@ -44,7 +45,7 @@ class AllureWriter {
       throw t
    }
 
-   private val uuids = mutableMapOf<TestPath, String>()
+   private val uuids = ConcurrentHashMap<TestPath, String>()
 
    fun id(testCase: TestCase) = uuids[testCase.description.testPath()]
 
