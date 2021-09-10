@@ -1,6 +1,5 @@
 package io.kotest.extensions.allure
 
-import io.kotest.core.listeners.ProjectListener
 import io.kotest.core.listeners.SpecInstantiationListener
 import io.kotest.core.listeners.TestListener
 import io.kotest.core.spec.Spec
@@ -9,7 +8,7 @@ import io.kotest.core.test.TestResult
 import io.kotest.core.test.TestType
 import kotlin.reflect.KClass
 
-class AllureTestReporter(private val includeContainers: Boolean = false) : TestListener, ProjectListener, SpecInstantiationListener {
+class AllureTestReporter(private val includeContainers: Boolean = false) : TestListener, SpecInstantiationListener {
 
    override val name = "AllureTestReporter"
 
