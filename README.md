@@ -14,6 +14,10 @@ Please create issues on the main kotest [board](https://github.com/kotest/kotest
 
 ## Changelog
 
+### 1.0.3
+
+* Fix for NPE when running Kotest in parallel mode #5
+
 ### 1.0.2
 
 * Release for Allure 2.14 and JDK8 compatibility
