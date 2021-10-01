@@ -22,7 +22,7 @@ plugins {
    maven
    `maven-publish`
    kotlin("jvm").version(Libs.kotlinVersion)
-   id("io.qameta.allure") version "2.8.1"
+   id("io.qameta.allure") version "2.9.4"
 }
 
 allprojects {
