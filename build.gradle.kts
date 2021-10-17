@@ -22,7 +22,7 @@ plugins {
    maven
    `maven-publish`
    kotlin("jvm").version(Libs.kotlinVersion)
-   id("io.qameta.allure") version "2.8.1"
+   id("io.qameta.allure") version "2.9.6"
 }
 
 allprojects {
@@ -68,8 +68,8 @@ allprojects {
 }
 
 allure {
-   autoconfigure = false
-   version = "2.13.1"
+   adapter.autoconfigure.set(false)
+   version.set("2.13.2")
 }
 
 apply("./publish.gradle.kts")
