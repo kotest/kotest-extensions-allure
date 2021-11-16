@@ -4,7 +4,7 @@ object Libs {
    const val org = "io.kotest.extensions"
 
    object Kotest {
-      private const val version = "4.6.2"
+      private const val version = "4.6.3"
       const val junit5 = "io.kotest:kotest-runner-junit5-jvm:$version"
       const val common = "io.kotest:kotest-common:$version"
       const val assertions = "io.kotest:kotest-assertions-core:$version"
@@ -12,7 +12,7 @@ object Libs {
    }
 
    object Allure {
-      private const val version = "2.14.0"
+      private const val version = "2.16.1"
       const val commons = "io.qameta.allure:allure-java-commons:$version"
    }
 
