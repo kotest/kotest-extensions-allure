@@ -22,7 +22,7 @@ class AllureTestListenerTest : WordSpec() {
 
       "allure test listener" should {
          "detect label annotations" {
-            val id = allure.writer.id(this.context.testCase).toString()
+            val id = allure.writer.id(this.testCase).toString()
             allure.writer.allure.updateTestCase(id) { result ->
                result.labels.forOne {
                   it.name shouldBe ResultsUtils.OWNER_LABEL_NAME

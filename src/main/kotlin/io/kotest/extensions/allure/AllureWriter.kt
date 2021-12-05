@@ -1,30 +1,31 @@
 package io.kotest.extensions.allure
 
+import io.kotest.core.descriptors.Descriptor
+import io.kotest.core.descriptors.TestPath
+import io.kotest.core.descriptors.spec
 import io.kotest.core.spec.Spec
-import io.kotest.core.test.Description
 import io.kotest.core.test.TestCase
-import io.kotest.core.test.TestPath
+import io.kotest.core.test.TestCaseSeverityLevel
 import io.kotest.core.test.TestResult
-import io.kotest.core.test.TestStatus
 import io.qameta.allure.Allure
 import io.qameta.allure.AllureLifecycle
 import io.qameta.allure.Epic
 import io.qameta.allure.Feature
 import io.qameta.allure.Issue
-import io.qameta.allure.Owner
-import io.qameta.allure.Severity
-import io.qameta.allure.Story
-import io.qameta.allure.SeverityLevel
 import io.qameta.allure.Link
 import io.qameta.allure.Links
+import io.qameta.allure.Owner
+import io.qameta.allure.Severity
+import io.qameta.allure.SeverityLevel
+import io.qameta.allure.Story
 import io.qameta.allure.model.Label
 import io.qameta.allure.model.Status
 import io.qameta.allure.model.StatusDetails
 import io.qameta.allure.model.StepResult
 import io.qameta.allure.util.ResultsUtils
 import java.lang.reflect.InvocationTargetException
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 
@@ -47,7 +48,7 @@ class AllureWriter {
 
    private val uuids = ConcurrentHashMap<TestPath, String>()
 
-   fun id(testCase: TestCase) = uuids[testCase.description.testPath()]
+   fun id(testCase: TestCase) = uuids[testCase.descriptor.path()]
 
    fun startTestCase(testCase: TestCase) {
       val labels = listOfNotNull(
@@ -58,8 +59,8 @@ class AllureWriter {
          ResultsUtils.createLanguageLabel(LanguageLabel),
          testCase.owner(),
          ResultsUtils.createPackageLabel(testCase.spec::class.java.`package`.name),
-         ResultsUtils.createSuiteLabel(testCase.description.spec().displayName()),
-         testCase.config.severity?.let { ResultsUtils.createSeverityLabel(it.name.convertToSeverity()) } ?: testCase.severity(),
+         ResultsUtils.createSuiteLabel(testCase.descriptor.spec().id.value),
+         ResultsUtils.createSeverityLabel(testCase.config.severity.convertToSeverity()),
          testCase.story(),
          ResultsUtils.createThreadLabel()
       )
@@ -71,18 +72,19 @@ class AllureWriter {
       testCase.link()?.let {
          links.add(testCase.link())
       }
-      testCase.links()?.forEach{
+      testCase.links()?.forEach {
          links.add(ResultsUtils.createLink(it))
       }
       val uuid = UUID.randomUUID().toString()
-      uuids[testCase.description.testPath()] = uuid
+      uuids[testCase.descriptor.path()] = uuid
 
+      val testName = testCase.constructName()
       val result = io.qameta.allure.model.TestResult()
-         .setFullName(testCase.description.testDisplayPath().value)
-         .setName(testCase.description.testDisplayPath().value)
+         .setFullName(testName)
+         .setName(testName)
          .setUuid(uuid)
-         .setTestCaseId(safeId(testCase.description))
-         .setHistoryId(safeId(testCase.description))
+         .setTestCaseId(safeId(testCase.descriptor))
+         .setHistoryId(safeId(testCase.descriptor))
          .setLabels(labels)
          .setLinks(links)
          .setDescription(testCase.description())
@@ -92,26 +94,27 @@ class AllureWriter {
    }
 
    fun finishTestCase(testCase: TestCase, result: TestResult) {
-      val status = when (result.status) {
+      val status = when (result) {
          // what we call an error, allure calls broken
-         TestStatus.Error -> Status.BROKEN
-         TestStatus.Failure -> Status.FAILED
-         TestStatus.Ignored -> Status.SKIPPED
-         TestStatus.Success -> Status.PASSED
+         is TestResult.Error -> Status.BROKEN
+         is TestResult.Failure -> Status.FAILED
+         is TestResult.Ignored -> Status.SKIPPED
+         is TestResult.Success -> Status.PASSED
       }
 
-      val uuid = uuids[testCase.description.testPath()]
-      val details = ResultsUtils.getStatusDetails(result.error)
+      val uuid = uuids[testCase.descriptor.path()]
+      val details = ResultsUtils.getStatusDetails(result.errorOrNull)
 
       allure.updateTestCase(uuid) {
          it.status = status
          it.statusDetails = details.orElseGet { null }
-         testCase.description.parents().forEach { d ->
-            it.steps.add(StepResult()
-               .setName(d.displayName())
-               .setStatus(Status.PASSED)
-               .setStart(0L)
-               .setStop(0L)
+         testCase.descriptor.parents().forEach { d ->
+            it.steps.add(
+               StepResult()
+                  .setName(d.id.value)
+                  .setStatus(Status.PASSED)
+                  .setStart(0L)
+                  .setStop(0L)
             )
          }
       }
@@ -127,7 +130,7 @@ class AllureWriter {
       kclass.link()?.let {
          links.add(kclass.link())
       }
-      kclass.links()?.forEach{
+      kclass.links()?.forEach {
          links.add(ResultsUtils.createLink(it))
       }
       return links.toList()
@@ -180,7 +183,7 @@ class AllureWriter {
    }
 
    // returns an id that's acceptable in format for allure
-   private fun safeId(description: Description): String = description.id.value
+   private fun safeId(descriptor: Descriptor.TestDescriptor): String = descriptor.path(true).value
 }
 
 fun TestCase.epic(): Label? = this.spec::class.findAnnotation<Epic>()?.let { ResultsUtils.createEpicLabel(it.value) }
@@ -197,18 +200,31 @@ fun TestCase.description() = spec::class.findAnnotation<io.qameta.allure.Descrip
 fun TestCase.link() = spec::class.findAnnotation<Link>()?.let { ResultsUtils.createLink(it) }
 fun TestCase.links() = spec::class.findAnnotation<Links>()?.value
 
-fun String.convertToSeverity(): SeverityLevel? = when (this) {
-   "BLOCKER" -> SeverityLevel.BLOCKER
-   "CRITICAL" -> SeverityLevel.CRITICAL
-   "NORMAL" -> SeverityLevel.NORMAL
-   "MINOR" -> SeverityLevel.MINOR
-   "TRIVIAL" -> SeverityLevel.TRIVIAL
+fun TestCase.constructName(): String {
+   return listOfNotNull(
+      parent?.constructName(),
+      name.prefix,
+      name.testName,
+      name.suffix
+   ).joinToString(separator = " ") { it.trim() }
+}
+
+fun TestCaseSeverityLevel.convertToSeverity(): SeverityLevel? = when (this) {
+   TestCaseSeverityLevel.BLOCKER -> SeverityLevel.BLOCKER
+   TestCaseSeverityLevel.CRITICAL -> SeverityLevel.CRITICAL
+   TestCaseSeverityLevel.NORMAL -> SeverityLevel.NORMAL
+   TestCaseSeverityLevel.MINOR -> SeverityLevel.MINOR
+   TestCaseSeverityLevel.TRIVIAL -> SeverityLevel.TRIVIAL
    else -> null
 }
 
 fun KClass<out Spec>.epic(): Label? = this.findAnnotation<Epic>()?.let { ResultsUtils.createEpicLabel(it.value) }
-fun KClass<out Spec>.feature(): Label? = this.findAnnotation<Feature>()?.let { ResultsUtils.createFeatureLabel(it.value) }
-fun KClass<out Spec>.severity(): Label? = this.findAnnotation<Severity>()?.let { ResultsUtils.createSeverityLabel(it.value) }
+fun KClass<out Spec>.feature(): Label? =
+   this.findAnnotation<Feature>()?.let { ResultsUtils.createFeatureLabel(it.value) }
+
+fun KClass<out Spec>.severity(): Label? =
+   this.findAnnotation<Severity>()?.let { ResultsUtils.createSeverityLabel(it.value) }
+
 fun KClass<out Spec>.story(): Label? = this.findAnnotation<Story>()?.let { ResultsUtils.createStoryLabel(it.value) }
 fun KClass<out Spec>.owner(): Label? = this.findAnnotation<Owner>()?.let { ResultsUtils.createOwnerLabel(it.value) }
 fun KClass<out Spec>.issue() = this.findAnnotation<Issue>()?.let { ResultsUtils.createIssueLink(it.value) }
