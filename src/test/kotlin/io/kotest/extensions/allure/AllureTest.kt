@@ -4,7 +4,12 @@ import io.kotest.core.spec.style.WordSpec
 import io.kotest.core.test.TestCaseSeverityLevel
 import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
-import io.qameta.allure.*
+import io.qameta.allure.Epic
+import io.qameta.allure.Feature
+import io.qameta.allure.Owner
+import io.qameta.allure.Severity
+import io.qameta.allure.SeverityLevel
+import io.qameta.allure.Story
 import io.qameta.allure.util.ResultsUtils
 
 @Story("foo-story")
@@ -22,7 +27,7 @@ class AllureTestListenerTest : WordSpec() {
 
       "allure test listener" should {
          "detect label annotations" {
-            val id = allure.writer.id(this.context.testCase).toString()
+            val id = allure.writer.id(this.testCase).toString()
             allure.writer.allure.updateTestCase(id) { result ->
                result.labels.forOne {
                   it.name shouldBe ResultsUtils.OWNER_LABEL_NAME
