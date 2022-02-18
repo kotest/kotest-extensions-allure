@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import io.kotest.assertions.withClue
 import io.kotest.core.spec.Order
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.inspectors.forOne
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import java.nio.file.Paths
 
@@ -20,14 +18,15 @@ class AllureTestReporterTest : WordSpec() {
    private val mapper = ObjectMapper().registerModule(KotlinModule())
 
    private fun findTestFile(name: String): JsonNode {
+      val names = Paths.get("./build/allure-results").toFile().listFiles()
+         .filter { it.name.endsWith(".json") }
+         .map { mapper.readTree(it) }
+         .map { it.get("name").textValue() }
+
       return Paths.get("./build/allure-results").toFile().listFiles()
          .filter { it.name.endsWith(".json") }
          .map { mapper.readTree(it) }
-         .firstOrNull { it.get("name").textValue() == name }.also {
-            withClue("Test result with name [$name] not found") {
-               it.shouldNotBeNull()
-            }
-         }!!
+         .first { it.get("name").textValue() == name }
    }
 
    init {
@@ -60,18 +59,16 @@ class AllureTestReporterTest : WordSpec() {
             }
          }
          "set correct historyId" {
-            val json = findTestFile("context context a should work")
-            withClue("Validate historyId property") {
-               json["historyId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context a -- work"
-            }
+            val json = findTestFile("context a should work")
+            json["historyId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context a -- work"
          }
          "set correct testCaseId" {
-            val json = findTestFile("context context a should work")
+            val json = findTestFile("context a should work")
             json["testCaseId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context a -- work"
          }
          "set correct fullName" {
-            val json = findTestFile("context context a should work")
-            json["fullName"].textValue() shouldBe "context context a should work"
+            val json = findTestFile("context a should work")
+            json["fullName"].textValue() shouldBe "context a should work"
          }
       }
    }

@@ -16,7 +16,7 @@ import io.qameta.allure.util.ResultsUtils
 @Owner("foo-owner")
 @Epic("foo-epic")
 @Feature("foo-feature")
-@Severity(SeverityLevel.BLOCKER)
+@Severity(SeverityLevel.CRITICAL)
 class AllureTestListenerTest : WordSpec() {
 
    private val allure = AllureTestReporter()
@@ -24,7 +24,6 @@ class AllureTestListenerTest : WordSpec() {
    override fun listeners() = listOf(allure)
 
    init {
-
       "allure test listener" should {
          "detect label annotations" {
             val id = allure.writer.id(this.testCase).toString()
@@ -43,7 +42,7 @@ class AllureTestListenerTest : WordSpec() {
                }
                result.labels.forOne {
                   it.name shouldBe ResultsUtils.SEVERITY_LABEL_NAME
-                  it.value shouldBe "blocker"
+                  it.value shouldBe "critical"
                }
                result.labels.forOne {
                   it.name shouldBe ResultsUtils.FEATURE_LABEL_NAME
@@ -54,7 +53,7 @@ class AllureTestListenerTest : WordSpec() {
       }
 
       "allure test listener w severity for testCase" should {
-         "detect label annotations and override severity for this testCase".config(severity = TestCaseSeverityLevel.MINOR) {
+         "detect label annotations and override severity for this testCase".config(severity = TestCaseSeverityLevel.BLOCKER) {
             val id = allure.writer.id(this.testCase).toString()
             allure.writer.allure.updateTestCase(id) { result ->
                result.labels.forOne {
@@ -71,7 +70,7 @@ class AllureTestListenerTest : WordSpec() {
                }
                result.labels.forOne {
                   it.name shouldBe ResultsUtils.SEVERITY_LABEL_NAME
-                  it.value shouldBe "minor"
+                  it.value shouldBe "blocker"
                }
                result.labels.forOne {
                   it.name shouldBe ResultsUtils.FEATURE_LABEL_NAME

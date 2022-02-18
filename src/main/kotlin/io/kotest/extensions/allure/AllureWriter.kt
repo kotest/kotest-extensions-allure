@@ -2,6 +2,7 @@ package io.kotest.extensions.allure
 
 import io.kotest.core.descriptors.Descriptor
 import io.kotest.core.descriptors.TestPath
+import io.kotest.core.descriptors.spec
 import io.kotest.core.spec.Spec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestCaseSeverityLevel
@@ -23,7 +24,7 @@ import io.qameta.allure.model.StatusDetails
 import io.qameta.allure.model.StepResult
 import io.qameta.allure.util.ResultsUtils
 import java.lang.reflect.InvocationTargetException
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
@@ -59,7 +60,7 @@ class AllureWriter {
          testCase.owner(),
          ResultsUtils.createPackageLabel(testCase.spec::class.java.`package`.name),
          ResultsUtils.createSuiteLabel(testCase.descriptor.spec().id.value),
-         ResultsUtils.createSeverityLabel(testCase.config.severity.convertToSeverity()),
+         testCase.maxSeverity()?.let { ResultsUtils.createSeverityLabel(it) },
          testCase.story(),
          ResultsUtils.createThreadLabel()
       )
@@ -189,8 +190,16 @@ fun TestCase.epic(): Label? = this.spec::class.findAnnotation<Epic>()?.let { Res
 fun TestCase.feature(): Label? =
    this.spec::class.findAnnotation<Feature>()?.let { ResultsUtils.createFeatureLabel(it.value) }
 
-fun TestCase.severity(): Label? =
-   this.spec::class.findAnnotation<Severity>()?.let { ResultsUtils.createSeverityLabel(it.value) }
+fun TestCase.maxSeverity(): SeverityLevel? {
+   val classSeverity = this.spec::class.findAnnotation<Severity>()?.value?.toTestCaseSeverity()
+   val max = if (classSeverity != null) {
+      maxOf(classSeverity, config.severity, compareBy { it.level })
+   } else {
+      config.severity
+   }
+
+   return max.toAllureSeverity()
+}
 
 fun TestCase.story(): Label? = this.spec::class.findAnnotation<Story>()?.let { ResultsUtils.createStoryLabel(it.value) }
 fun TestCase.owner(): Label? = this.spec::class.findAnnotation<Owner>()?.let { ResultsUtils.createOwnerLabel(it.value) }
@@ -200,20 +209,35 @@ fun TestCase.link() = spec::class.findAnnotation<Link>()?.let { ResultsUtils.cre
 fun TestCase.links() = spec::class.findAnnotation<Links>()?.value
 
 fun TestCase.constructName(): String {
-   return listOfNotNull(
-      parent?.constructName(),
-      name.prefix,
-      name.testName,
-      name.suffix
-   ).joinToString(separator = " ") { it.trim() }
+   val displayName = descriptor.id.value
+   val appendPrefix = name.prefix?.let { !displayName.startsWith(it) } ?: false
+
+   val result = sequence {
+      yield(parent?.constructName())
+      if (appendPrefix) {
+         yield(name.prefix)
+      }
+      yield(displayName)
+   }.filterNotNull().joinToString(separator = " ") { it.trim() }
+
+   return result
 }
 
-fun TestCaseSeverityLevel.convertToSeverity(): SeverityLevel? = when (this) {
+fun TestCaseSeverityLevel.toAllureSeverity(): SeverityLevel? = when (this) {
    TestCaseSeverityLevel.BLOCKER -> SeverityLevel.BLOCKER
    TestCaseSeverityLevel.CRITICAL -> SeverityLevel.CRITICAL
    TestCaseSeverityLevel.NORMAL -> SeverityLevel.NORMAL
    TestCaseSeverityLevel.MINOR -> SeverityLevel.MINOR
    TestCaseSeverityLevel.TRIVIAL -> SeverityLevel.TRIVIAL
+   else -> null
+}
+
+fun SeverityLevel.toTestCaseSeverity(): TestCaseSeverityLevel? = when (this) {
+   SeverityLevel.BLOCKER -> TestCaseSeverityLevel.BLOCKER
+   SeverityLevel.CRITICAL -> TestCaseSeverityLevel.CRITICAL
+   SeverityLevel.NORMAL -> TestCaseSeverityLevel.NORMAL
+   SeverityLevel.MINOR -> TestCaseSeverityLevel.MINOR
+   SeverityLevel.TRIVIAL -> TestCaseSeverityLevel.TRIVIAL
    else -> null
 }
 
