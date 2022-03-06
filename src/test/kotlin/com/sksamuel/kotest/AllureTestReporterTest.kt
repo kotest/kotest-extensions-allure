@@ -18,6 +18,11 @@ class AllureTestReporterTest : WordSpec() {
    private val mapper = ObjectMapper().registerModule(KotlinModule())
 
    private fun findTestFile(name: String): JsonNode {
+      val names = Paths.get("./build/allure-results").toFile().listFiles()
+         .filter { it.name.endsWith(".json") }
+         .map { mapper.readTree(it) }
+         .map { it.get("name").textValue() }
+
       return Paths.get("./build/allure-results").toFile().listFiles()
          .filter { it.name.endsWith(".json") }
          .map { mapper.readTree(it) }
@@ -55,11 +60,11 @@ class AllureTestReporterTest : WordSpec() {
          }
          "set correct historyId" {
             val json = findTestFile("context a should work")
-            json["historyId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context_a/should_work"
+            json["historyId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context a -- work"
          }
          "set correct testCaseId" {
             val json = findTestFile("context a should work")
-            json["testCaseId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context_a/should_work"
+            json["testCaseId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context a -- work"
          }
          "set correct fullName" {
             val json = findTestFile("context a should work")
