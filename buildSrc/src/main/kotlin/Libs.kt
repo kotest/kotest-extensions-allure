@@ -4,7 +4,7 @@ object Libs {
    const val org = "io.kotest.extensions"
 
    object Kotest {
-      private const val version = "5.1.0"
+      private const val version = "5.2.2"
       const val junit5 = "io.kotest:kotest-runner-junit5-jvm:$version"
       const val common = "io.kotest:kotest-common:$version"
       const val assertions = "io.kotest:kotest-assertions-core:$version"
