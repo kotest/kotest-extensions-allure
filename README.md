@@ -14,6 +14,9 @@ Please create issues on the main kotest [board](https://github.com/kotest/kotest
 
 ## Changelog
 
+### Unreleased
+* Upgrade kotest to 5.2.2
+
 ### 1.1.0
 
 * Upgraded to Allure 2.17, requires Kotlin 1.6 and Kotest 5.x
