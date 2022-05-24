@@ -1,6 +1,6 @@
 [versions]
 kotest = "5.2.2"
-allure = "2.17.2"
+allure = "2.18.1"
 
 [libraries]
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
