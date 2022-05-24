@@ -1,9 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
-   `java-library`
-   `maven-publish`
-   signing
+   id("kotest-publishing-conventions")
    kotlin("jvm") version "1.6.10"
    id("io.qameta.allure") version "2.9.6"
 }
@@ -47,5 +45,3 @@ allure {
    adapter.autoconfigure.set(false)
    version.set("2.13.2")
 }
-
-apply("./publish.gradle.kts")
