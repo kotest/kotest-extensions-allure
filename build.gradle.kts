@@ -37,7 +37,7 @@ allprojects {
       implementation(Libs.Kotest.api)
       implementation("javax.xml.bind:jaxb-api:2.3.1")
       implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
-      implementation("com.sun.xml.bind:jaxb-impl:2.3.2")
+      implementation("com.sun.xml.bind:jaxb-impl:2.3.6")
       api(Libs.Allure.commons)
       api(Libs.Allure.junit5)
       testImplementation(Libs.Kotest.assertions)
