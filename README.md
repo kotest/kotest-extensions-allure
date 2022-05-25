@@ -14,7 +14,8 @@ Please create issues on the main kotest [board](https://github.com/kotest/kotest
 
 ## Changelog
 
-### Unreleased
+### 1.1.1
+
 * Upgrade kotest to 5.2.2
 
 ### 1.1.0
