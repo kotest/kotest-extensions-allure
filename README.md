@@ -14,6 +14,11 @@ Please create issues on the main kotest [board](https://github.com/kotest/kotest
 
 ## Changelog
 
+
+### 1.2.0
+
+* Update to Kotest 5.3.0
+
 ### 1.1.1
 
 * Upgrade kotest to 5.2.2
