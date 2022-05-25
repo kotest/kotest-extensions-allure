@@ -2,8 +2,6 @@ package io.kotest.extensions.allure
 
 import io.kotest.core.descriptors.Descriptor
 import io.kotest.core.descriptors.TestPath
-import io.kotest.core.descriptors.spec
-import io.kotest.core.spec.Spec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestCaseSeverityLevel
 import io.kotest.core.test.TestResult
@@ -122,7 +120,7 @@ class AllureWriter {
       allure.writeTestCase(uuid)
    }
 
-   private fun links(kclass: KClass<out Spec>): List<io.qameta.allure.model.Link?> {
+   private fun links(kclass: KClass<*>): List<io.qameta.allure.model.Link?> {
       val links = mutableListOf<io.qameta.allure.model.Link?>()
       kclass.issue()?.let {
          links.add(kclass.issue())
@@ -136,7 +134,7 @@ class AllureWriter {
       return links.toList()
    }
 
-   fun allureResultSpecInitFailure(kclass: KClass<out Spec>, t: Throwable) {
+   fun allureResultSpecInitFailure(kclass: KClass<*>, t: Throwable) {
       val uuid = UUID.randomUUID()
       val labels = listOfNotNull(
          ResultsUtils.createSuiteLabel(kclass.qualifiedName),
@@ -241,16 +239,16 @@ fun SeverityLevel.toTestCaseSeverity(): TestCaseSeverityLevel? = when (this) {
    else -> null
 }
 
-fun KClass<out Spec>.epic(): Label? = this.findAnnotation<Epic>()?.let { ResultsUtils.createEpicLabel(it.value) }
-fun KClass<out Spec>.feature(): Label? =
+fun KClass<*>.epic(): Label? = this.findAnnotation<Epic>()?.let { ResultsUtils.createEpicLabel(it.value) }
+fun KClass<*>.feature(): Label? =
    this.findAnnotation<Feature>()?.let { ResultsUtils.createFeatureLabel(it.value) }
 
-fun KClass<out Spec>.severity(): Label? =
+fun KClass<*>.severity(): Label? =
    this.findAnnotation<Severity>()?.let { ResultsUtils.createSeverityLabel(it.value) }
 
-fun KClass<out Spec>.story(): Label? = this.findAnnotation<Story>()?.let { ResultsUtils.createStoryLabel(it.value) }
-fun KClass<out Spec>.owner(): Label? = this.findAnnotation<Owner>()?.let { ResultsUtils.createOwnerLabel(it.value) }
-fun KClass<out Spec>.issue() = this.findAnnotation<Issue>()?.let { ResultsUtils.createIssueLink(it.value) }
-fun KClass<out Spec>.link() = this.findAnnotation<Link>()?.let { ResultsUtils.createLink(it) }
-fun KClass<out Spec>.links() = this.findAnnotation<Links>()?.value
-fun KClass<out Spec>.description() = this.findAnnotation<io.qameta.allure.Description>()?.value
+fun KClass<*>.story(): Label? = this.findAnnotation<Story>()?.let { ResultsUtils.createStoryLabel(it.value) }
+fun KClass<*>.owner(): Label? = this.findAnnotation<Owner>()?.let { ResultsUtils.createOwnerLabel(it.value) }
+fun KClass<*>.issue() = this.findAnnotation<Issue>()?.let { ResultsUtils.createIssueLink(it.value) }
+fun KClass<*>.link() = this.findAnnotation<Link>()?.let { ResultsUtils.createLink(it) }
+fun KClass<*>.links() = this.findAnnotation<Links>()?.value
+fun KClass<*>.description() = this.findAnnotation<io.qameta.allure.Description>()?.value

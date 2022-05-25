@@ -1,16 +1,13 @@
 package io.kotest.extensions.allure
 
-import io.kotest.core.listeners.SpecInstantiationListener
+import io.kotest.core.listeners.InstantiationErrorListener
 import io.kotest.core.listeners.TestListener
-import io.kotest.core.spec.Spec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.core.test.TestType
 import kotlin.reflect.KClass
 
-class AllureTestReporter(private val includeContainers: Boolean = false) : TestListener, SpecInstantiationListener {
-
-   override val name = "AllureTestReporter"
+class AllureTestReporter(private val includeContainers: Boolean = false) : TestListener, InstantiationErrorListener {
 
    val writer = AllureWriter()
 
@@ -26,7 +23,7 @@ class AllureTestReporter(private val includeContainers: Boolean = false) : TestL
       }
    }
 
-   override fun specInstantiationError(kclass: KClass<out Spec>, t: Throwable) {
+   override suspend fun instantiationError(kclass: KClass<*>, t: Throwable) {
       writer.allureResultSpecInitFailure(kclass, t)
    }
 }
