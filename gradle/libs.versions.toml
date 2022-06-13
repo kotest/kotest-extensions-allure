@@ -1,5 +1,5 @@
 [versions]
-kotest = "5.3.0"
+kotest = "5.3.1"
 allure = "2.18.1"
 
 [libraries]
