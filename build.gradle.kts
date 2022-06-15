@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 plugins {
    id("kotest-publishing-conventions")
    kotlin("jvm") version "1.6.21"
-   id("io.qameta.allure") version "2.9.6"
+   id("io.qameta.allure") version "2.10.0"
 }
 
 group = "io.kotest.extensions"
