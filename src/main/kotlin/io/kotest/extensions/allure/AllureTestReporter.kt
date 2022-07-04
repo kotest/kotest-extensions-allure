@@ -1,13 +1,16 @@
 package io.kotest.extensions.allure
 
+import io.kotest.core.listeners.AfterTestListener
+import io.kotest.core.listeners.BeforeTestListener
 import io.kotest.core.listeners.InstantiationErrorListener
-import io.kotest.core.listeners.TestListener
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.core.test.TestType
 import kotlin.reflect.KClass
 
-class AllureTestReporter(private val includeContainers: Boolean = false) : TestListener, InstantiationErrorListener {
+class AllureTestReporter(
+   private val includeContainers: Boolean = false
+) : BeforeTestListener, AfterTestListener, InstantiationErrorListener {
 
    val writer = AllureWriter()
 

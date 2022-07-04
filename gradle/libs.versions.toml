@@ -6,11 +6,11 @@ allure = "2.18.1"
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-framework-api = { module = "io.kotest:kotest-framework-api", version.ref = "kotest" }
+kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version = "2.13.3" }
 
 allure-commons = { module = "io.qameta.allure:allure-java-commons", version.ref = "allure" }
-allure-junit5 = { module = "io.qameta.allure:allure-junit5", version.ref = "allure" }
 
 jaxb-api = { module = "javax.xml.bind:jaxb-api", version = "2.3.1" }
 jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version = "4.0.0" }
