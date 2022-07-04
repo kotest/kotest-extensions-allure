@@ -12,6 +12,7 @@ version = Ci.version
 dependencies {
    implementation(kotlin("reflect"))
    implementation(libs.kotest.framework.api)
+   implementation(libs.kotest.framework.engine)
    implementation(libs.bundles.jaxb)
    api(libs.allure.commons)
    testImplementation(libs.kotest.assertions.core)

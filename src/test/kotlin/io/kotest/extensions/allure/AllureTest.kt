@@ -1,5 +1,6 @@
 package io.kotest.extensions.allure
 
+import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.core.test.TestCaseSeverityLevel
 import io.kotest.inspectors.forOne
@@ -21,7 +22,7 @@ class AllureTestListenerTest : WordSpec() {
 
    private val allure = AllureTestReporter()
 
-   override fun listeners() = listOf(allure)
+   override fun extensions(): List<Extension> = listOf(allure)
 
    init {
       "allure test listener" should {
