@@ -3,7 +3,9 @@ package com.sksamuel.kotest
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.SingletonSupport
 import io.kotest.core.spec.Order
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.inspectors.forOne
@@ -21,12 +23,14 @@ class AllureTestReporterTest : WordSpec() {
       val names = Paths.get("./build/allure-results").toFile().listFiles()
          .filter { it.name.endsWith(".json") }
          .map { mapper.readTree(it) }
-         .map { it.get("name").textValue() }
+         .map { it.get("fullName")?.textValue() }
+
+      names.forEach { println(it) }
 
       return Paths.get("./build/allure-results").toFile().listFiles()
          .filter { it.name.endsWith(".json") }
          .map { mapper.readTree(it) }
-         .first { it.get("name").textValue() == name }
+         .first { it.get("fullName")?.textValue() == name }
    }
 
    init {
@@ -59,16 +63,16 @@ class AllureTestReporterTest : WordSpec() {
             }
          }
          "set correct historyId" {
-            val json = findTestFile("context a should work")
+            val json = findTestFile("context a / work")
             json["historyId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context a -- work"
          }
          "set correct testCaseId" {
-            val json = findTestFile("context a should work")
+            val json = findTestFile("context a / work")
             json["testCaseId"].textValue() shouldBe "com.sksamuel.kotest.DummyShouldSpec/context a -- work"
          }
          "set correct fullName" {
-            val json = findTestFile("context a should work")
-            json["fullName"].textValue() shouldBe "context a should work"
+            val json = findTestFile("context a / work")
+            json["fullName"].textValue() shouldBe "context a / work"
          }
       }
    }

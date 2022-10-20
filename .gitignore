@@ -16,3 +16,5 @@ project/plugins/project/
 credentials.sbt
 /.idea/
 /allure-results
+
+.DS_Store
