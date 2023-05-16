@@ -14,7 +14,7 @@ import io.qameta.allure.model.StatusDetails
 import io.qameta.allure.model.StepResult
 import io.qameta.allure.util.ResultsUtils
 import java.lang.reflect.InvocationTargetException
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
