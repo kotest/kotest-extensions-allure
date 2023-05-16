@@ -2,8 +2,8 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
    id("kotest-publishing-conventions")
-   kotlin("jvm") version "1.6.21"
-   id("io.qameta.allure") version "2.10.0"
+   alias(libs.plugins.kotlinJvm).apply(true)
+   alias(libs.plugins.allure).apply(true)
 }
 
 group = "io.kotest.extensions"
@@ -29,8 +29,18 @@ tasks.named<Test>("test") {
    }
 }
 
+
+
+java {
+   toolchain {
+      languageVersion.set(JavaLanguageVersion.of(11))
+   }
+}
+
+
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-   kotlinOptions.jvmTarget = "1.8"
+   kotlinOptions.jvmTarget = "11"
 }
 
 repositories {
@@ -44,5 +54,5 @@ repositories {
 allure {
    adapter.autoconfigure.set(false)
    adapter.autoconfigureListeners.set(false)
-   version.set("2.18.1")
+   version.set(libs.versions.allure)
 }
