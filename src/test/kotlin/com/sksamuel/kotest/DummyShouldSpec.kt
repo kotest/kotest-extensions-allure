@@ -7,12 +7,12 @@ import io.kotest.matchers.booleans.shouldBeTrue
 @Order(0)
 class DummyShouldSpec : ShouldSpec() {
    init {
-      context("context a") {
+      context("a") {
          should("work") {
             true.shouldBeTrue()
          }
       }
-      context("context b") {
+      context("b") {
          should("work") {
             true.shouldBeTrue()
          }

@@ -9,6 +9,7 @@ import io.qameta.allure.Epic
 @Order(0)
 @Epic("my epic")
 class DummyBehaviorSpecTest : BehaviorSpec() {
+
    init {
       given("a given") {
          `when`("a when") {

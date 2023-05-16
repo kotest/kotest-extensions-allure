@@ -14,7 +14,7 @@ import io.qameta.allure.model.StatusDetails
 import io.qameta.allure.model.StepResult
 import io.qameta.allure.util.ResultsUtils
 import java.lang.reflect.InvocationTargetException
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
@@ -25,7 +25,9 @@ class AllureWriter {
       const val FrameworkLabel = "kotest"
    }
 
-   private val formatter = DefaultDisplayNameFormatter(ProjectConfiguration())
+   private val formatter = DefaultDisplayNameFormatter(ProjectConfiguration().apply {
+      includeTestScopeAffixes = true
+   })
 
    /**
     * Loads the [AllureLifecycle] object which is used to report test lifecycle events.
@@ -63,7 +65,7 @@ class AllureWriter {
 
       val result = io.qameta.allure.model.TestResult()
          .setFullName(formatter.formatTestPath(testCase, " / "))
-         .setName(formatter.format(testCase))
+         .setName(formatter.formatTestPath(testCase, " "))
          .setUuid(uuid)
          .setTestCaseId(safeId(testCase.descriptor))
          .setHistoryId(safeId(testCase.descriptor))

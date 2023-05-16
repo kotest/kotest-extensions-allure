@@ -15,6 +15,7 @@ dependencies {
    implementation(libs.kotest.framework.engine)
    implementation(libs.bundles.jaxb)
    api(libs.allure.commons)
+   implementation(libs.allure.junit5)
    testImplementation(libs.kotest.assertions.core)
    testImplementation(libs.kotest.runner.junit5)
    testImplementation(libs.jackson.module.kotlin)
