@@ -2,8 +2,8 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
    id("kotest-publishing-conventions")
-   kotlin("jvm") version "1.6.21"
-   id("io.qameta.allure") version "2.10.0"
+   alias(libs.plugins.kotlinJvm)
+   alias(libs.plugins.allure)
 }
 
 group = "io.kotest.extensions"
@@ -15,6 +15,7 @@ dependencies {
    implementation(libs.kotest.framework.engine)
    implementation(libs.bundles.jaxb)
    api(libs.allure.commons)
+   implementation(libs.allure.junit5)
    testImplementation(libs.kotest.assertions.core)
    testImplementation(libs.kotest.runner.junit5)
    testImplementation(libs.jackson.module.kotlin)
@@ -44,5 +45,5 @@ repositories {
 allure {
    adapter.autoconfigure.set(false)
    adapter.autoconfigureListeners.set(false)
-   version.set("2.18.1")
+   version.set(libs.versions.allure)
 }
