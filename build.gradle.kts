@@ -2,8 +2,8 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
    id("kotest-publishing-conventions")
-   alias(libs.plugins.kotlinJvm).apply(true)
-   alias(libs.plugins.allure).apply(true)
+   alias(libs.plugins.kotlinJvm)
+   alias(libs.plugins.allure)
 }
 
 group = "io.kotest.extensions"
