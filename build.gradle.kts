@@ -15,7 +15,6 @@ dependencies {
    implementation(libs.kotest.framework.engine)
    implementation(libs.bundles.jaxb)
    api(libs.allure.commons)
-   implementation(libs.allure.junit5)
    testImplementation(libs.kotest.assertions.core)
    testImplementation(libs.kotest.runner.junit5)
    testImplementation(libs.jackson.module.kotlin)
@@ -41,7 +40,14 @@ repositories {
 }
 
 allure {
+   version.set(libs.versions.allure)
    adapter.autoconfigure.set(false)
    adapter.autoconfigureListeners.set(false)
-   version.set(libs.versions.allure)
+   adapter {
+      frameworks {
+         junit5 {
+            enabled.set(false)
+         }
+      }
+   }
 }
