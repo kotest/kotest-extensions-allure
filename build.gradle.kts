@@ -29,6 +29,10 @@ tasks.named<Test>("test") {
    }
 }
 
+kotlin{
+   jvmToolchain(8)
+}
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
    kotlinOptions.jvmTarget = "1.8"
 }
