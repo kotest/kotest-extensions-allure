@@ -6,6 +6,7 @@ import io.kotest.core.descriptors.TestPath
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.engine.test.names.DefaultDisplayNameFormatter
+import io.kotest.engine.test.names.FallbackDisplayNameFormatter
 import io.kotest.engine.test.names.formatTestPath
 import io.qameta.allure.Allure
 import io.qameta.allure.AllureLifecycle
@@ -25,9 +26,11 @@ class AllureWriter {
       const val FrameworkLabel = "kotest"
    }
 
-   private val formatter = DefaultDisplayNameFormatter(ProjectConfiguration().apply {
-      includeTestScopeAffixes = true
-   })
+   private val formatter = FallbackDisplayNameFormatter(
+      DefaultDisplayNameFormatter(ProjectConfiguration().apply {
+         includeTestScopeAffixes = true
+      })
+   )
 
    /**
     * Loads the [AllureLifecycle] object which is used to report test lifecycle events.
