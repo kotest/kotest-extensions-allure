@@ -19,7 +19,7 @@ allure-commons = { module = "io.qameta.allure:allure-java-commons", version.ref 
 
 jaxb-api = { module = "javax.xml.bind:jaxb-api", version = "2.3.1" }
 jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version = "4.0.5" }
-jaxb-impl = { module = "com.sun.xml.bind:jaxb-impl", version = "4.0.4" }
+jaxb-impl = { module = "com.sun.xml.bind:jaxb-impl", version = "4.0.5" }
 
 [bundles]
 jaxb = ["jaxb-api", "jaxb-core", "jaxb-impl"]
