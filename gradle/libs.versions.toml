@@ -18,7 +18,7 @@ jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-
 allure-commons = { module = "io.qameta.allure:allure-java-commons", version.ref = "allure" }
 
 jaxb-api = { module = "javax.xml.bind:jaxb-api", version = "2.3.1" }
-jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version = "4.0.4" }
+jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version = "4.0.5" }
 jaxb-impl = { module = "com.sun.xml.bind:jaxb-impl", version = "4.0.4" }
 
 [bundles]
