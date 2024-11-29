@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.8.21"
 kotest = "5.8.1"
-allure = "2.24.0"
+allure = "2.29.1"
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
