@@ -1,5 +1,7 @@
 # kotest-extensions-allure
 
+### This project has been promoted to the top level Kotest repo. Follow development and raise issues on that project.
+
 Kotest extensions for [Allure](http://allure.qatools.ru/).
 
 See [docs](https://kotest.io/docs/extensions/allure.html).
